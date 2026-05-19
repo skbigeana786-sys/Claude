@@ -1,9 +1,3 @@
-const SENTIMENT_COLORS = {
-  Positive: { bg: '#14532d', text: '#86efac' },
-  Negative: { bg: '#7f1d1d', text: '#fca5a5' },
-  Neutral: { bg: '#1e3a5f', text: '#93c5fd' },
-}
-
 function formatDate(iso) {
   if (!iso) return ''
   try {
@@ -16,9 +10,6 @@ function formatDate(iso) {
 }
 
 export default function NewsCard({ article }) {
-  const sentiment = article.sentiment || 'Neutral'
-  const sc = SENTIMENT_COLORS[sentiment] || SENTIMENT_COLORS.Neutral
-
   return (
     <a
       href={article.url}
@@ -51,15 +42,9 @@ export default function NewsCard({ article }) {
         />
       )}
       <div style={{ padding: '16px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+        <div style={{ marginBottom: '8px' }}>
           <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
             {article.source} · {formatDate(article.published_at)}
-          </span>
-          <span style={{
-            fontSize: '11px', fontWeight: 600, padding: '2px 8px', borderRadius: '12px',
-            background: sc.bg, color: sc.text,
-          }}>
-            {sentiment}
           </span>
         </div>
 
@@ -67,23 +52,10 @@ export default function NewsCard({ article }) {
           {article.title}
         </h3>
 
-        {article.summary && (
-          <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: 1.5, marginBottom: '10px' }}>
-            {article.summary}
+        {article.description && (
+          <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: 1.5 }}>
+            {article.description}
           </p>
-        )}
-
-        {article.tags?.length > 0 && (
-          <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-            {article.tags.map((tag) => (
-              <span key={tag} style={{
-                fontSize: '11px', padding: '2px 8px', borderRadius: '10px',
-                background: '#0f172a', color: '#6366f1', border: '1px solid #312e81',
-              }}>
-                {tag}
-              </span>
-            ))}
-          </div>
         )}
       </div>
     </a>

@@ -10,7 +10,6 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState('general')
   const [searchQuery, setSearchQuery] = useState('')
   const [articles, setArticles] = useState([])
-  const [digest, setDigest] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -25,7 +24,7 @@ export default function App() {
     setLoading(true)
     setError('')
     try {
-      const params = new URLSearchParams({ category, page_size: 9, summarize: true })
+      const params = new URLSearchParams({ category, page_size: 9 })
       if (query) params.set('query', query)
       const res = await fetch(`/api/news?${params}`)
       if (!res.ok) {
@@ -34,7 +33,6 @@ export default function App() {
       }
       const data = await res.json()
       setArticles(data.articles)
-      setDigest(data.digest)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -69,8 +67,8 @@ export default function App() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
             <span style={{ fontSize: '24px' }}>📰</span>
             <div>
-              <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#f1f5f9' }}>AI News Fetcher</h1>
-              <p style={{ fontSize: '12px', color: '#64748b' }}>Powered by NewsAPI + Claude AI</p>
+              <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#f1f5f9' }}>News Fetcher</h1>
+              <p style={{ fontSize: '12px', color: '#64748b' }}>Powered by NewsAPI</p>
             </div>
             <div style={{ marginLeft: 'auto', width: '340px' }}>
               <SearchBar onSearch={handleSearch} />
@@ -81,30 +79,11 @@ export default function App() {
       </header>
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
-        {/* AI Digest */}
-        {digest && !loading && (
-          <div style={{
-            background: 'linear-gradient(135deg, #1e1b4b, #312e81)',
-            border: '1px solid #4338ca',
-            borderRadius: '12px',
-            padding: '20px',
-            marginBottom: '28px',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
-              <span style={{ fontSize: '16px' }}>✨</span>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: '#a5b4fc', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                AI Digest
-              </span>
-            </div>
-            <p style={{ fontSize: '15px', color: '#c7d2fe', lineHeight: 1.6 }}>{digest}</p>
-          </div>
-        )}
-
         {/* State: loading */}
         {loading && (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <div style={{ fontSize: '40px', marginBottom: '16px', animation: 'spin 1s linear infinite' }}>⟳</div>
-            <p style={{ color: '#64748b' }}>Fetching & summarizing news with AI...</p>
+            <p style={{ color: '#64748b' }}>Fetching latest news...</p>
             <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
           </div>
         )}

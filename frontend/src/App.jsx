@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import ArticleModal from './components/ArticleModal'
 import CategoryFilter from './components/CategoryFilter'
 import NewsCard from './components/NewsCard'
 import SearchBar from './components/SearchBar'
@@ -12,6 +13,7 @@ export default function App() {
   const [articles, setArticles] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [selectedArticle, setSelectedArticle] = useState(null)
 
   useEffect(() => {
     fetch('/api/categories')
@@ -79,7 +81,6 @@ export default function App() {
       </header>
 
       <main style={{ maxWidth: '1200px', margin: '0 auto', padding: '24px' }}>
-        {/* State: loading */}
         {loading && (
           <div style={{ textAlign: 'center', padding: '80px 0' }}>
             <div style={{ fontSize: '40px', marginBottom: '16px', animation: 'spin 1s linear infinite' }}>⟳</div>
@@ -88,7 +89,6 @@ export default function App() {
           </div>
         )}
 
-        {/* State: error */}
         {error && !loading && (
           <div style={{
             background: '#450a0a', border: '1px solid #7f1d1d',
@@ -107,7 +107,6 @@ export default function App() {
           </div>
         )}
 
-        {/* Articles grid */}
         {!loading && !error && articles.length > 0 && (
           <>
             <div style={{ marginBottom: '16px', color: '#64748b', fontSize: '13px' }}>
@@ -121,13 +120,16 @@ export default function App() {
               gap: '20px',
             }}>
               {articles.map((article, i) => (
-                <NewsCard key={article.url || i} article={article} />
+                <NewsCard
+                  key={article.url || i}
+                  article={article}
+                  onClick={() => setSelectedArticle(article)}
+                />
               ))}
             </div>
           </>
         )}
 
-        {/* Empty state */}
         {!loading && !error && articles.length === 0 && (
           <div style={{ textAlign: 'center', padding: '80px 0', color: '#64748b' }}>
             <p style={{ fontSize: '40px', marginBottom: '12px' }}>🔍</p>
@@ -135,6 +137,13 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {selectedArticle && (
+        <ArticleModal
+          article={selectedArticle}
+          onClose={() => setSelectedArticle(null)}
+        />
+      )}
     </div>
   )
 }

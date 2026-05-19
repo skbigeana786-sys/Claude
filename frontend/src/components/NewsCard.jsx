@@ -9,20 +9,19 @@ function formatDate(iso) {
   }
 }
 
-export default function NewsCard({ article }) {
+export default function NewsCard({ article, onClick }) {
   return (
-    <a
-      href={article.url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
+      onClick={onClick}
       style={{
-        display: 'block',
         background: '#1e293b',
         borderRadius: '12px',
         overflow: 'hidden',
         border: '1px solid #334155',
         transition: 'transform 0.15s, border-color 0.15s',
         cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.transform = 'translateY(-2px)'
@@ -41,7 +40,7 @@ export default function NewsCard({ article }) {
           onError={(e) => { e.target.style.display = 'none' }}
         />
       )}
-      <div style={{ padding: '16px' }}>
+      <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ marginBottom: '8px' }}>
           <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 500 }}>
             {article.source} · {formatDate(article.published_at)}
@@ -53,11 +52,19 @@ export default function NewsCard({ article }) {
         </h3>
 
         {article.description && (
-          <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: 1.5 }}>
+          <p style={{ fontSize: '13px', color: '#94a3b8', lineHeight: 1.5, flex: 1 }}>
             {article.description}
           </p>
         )}
+
+        <div style={{ marginTop: '14px' }}>
+          <span style={{
+            fontSize: '12px', color: '#6366f1', fontWeight: 600,
+          }}>
+            Read article →
+          </span>
+        </div>
       </div>
-    </a>
+    </div>
   )
 }

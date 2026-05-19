@@ -7,6 +7,7 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+from article_scraper import scrape_article
 from news_fetcher import CATEGORIES, fetch_top_headlines
 
 load_dotenv()
@@ -59,6 +60,16 @@ async def get_news(
         raise HTTPException(status_code=502, detail=f"Failed to fetch news: {str(e)}")
 
     return NewsResponse(category=category, articles=articles)
+
+
+@app.get("/api/article")
+async def get_article(url: str = Query(..., description="Article URL to scrape")):
+    if not url.startswith("http"):
+        raise HTTPException(status_code=400, detail="Invalid URL")
+    result = await scrape_article(url)
+    if result.get("error") and not result.get("content"):
+        raise HTTPException(status_code=502, detail=result["error"])
+    return result
 
 
 @app.get("/api/health")
